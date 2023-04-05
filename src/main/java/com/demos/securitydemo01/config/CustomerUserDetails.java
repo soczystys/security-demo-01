@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerUserDetails implements UserDetailsService {
@@ -22,14 +23,14 @@ public class CustomerUserDetails implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        List<Customer> customers = customerRepository.findByEmail(username);
-        if (customers.size() == 0) {
+        Optional<Customer> customer = customerRepository.findByEmail(username);
+        if (customer.isEmpty()) {
             throw new UsernameNotFoundException("username " + username + " not found");
         } else {
-            String mail = customers.get(0).getEmail();
-            String password = customers.get(0).getPwd();
+            String mail = customer.get().getEmail();
+            String password = customer.get().getPwd();
             List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(customers.get(0).getRole()));
+            authorities.add(new SimpleGrantedAuthority(customer.get().getRole().name()));
             return new User(mail, password, authorities);
         }
     }

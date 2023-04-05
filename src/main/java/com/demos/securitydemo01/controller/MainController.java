@@ -2,6 +2,7 @@ package com.demos.securitydemo01.controller;
 
 import com.demos.securitydemo01.model.Customer;
 import com.demos.securitydemo01.model.CustomerDto;
+import com.demos.securitydemo01.model.Role;
 import com.demos.securitydemo01.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class MainController {
         Customer customer = new Customer();
         customer.setEmail(customerDto.getEmail());
         customer.setPwd(passwordEncoder.encode(customerDto.getPwd()));
-        customer.setRole("USER");
+        customer.setRole(Role.valueOf("USER"));
         return new ResponseEntity<>(customerService.saveCustomer(customer), HttpStatus.CREATED);
     }
 
